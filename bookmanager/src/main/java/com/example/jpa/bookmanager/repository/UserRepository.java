@@ -5,9 +5,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 public interface UserRepository extends JpaRepository<Person, Long> {
    List<Person> findByName(String name);
@@ -61,4 +63,6 @@ public interface UserRepository extends JpaRepository<Person, Long> {
    List<Person> findFirstByName(String name, Sort sort);
 
    Page<Person> findByName(String name, Pageable pageable);
+   @Query(value = "select * from person limit 1;", nativeQuery = true)
+   Map<String, Object> findRawRecord();
 }

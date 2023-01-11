@@ -1,5 +1,6 @@
 package com.example.jpa.bookmanager.repository;
 
+import com.example.jpa.bookmanager.domain.Gender;
 import com.example.jpa.bookmanager.domain.Person;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
@@ -16,6 +17,9 @@ import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatc
 class UserRepositoryTest {
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserHistoryRepository userHistoryRepository;
 
     @Test
     void search(){
@@ -149,7 +153,6 @@ class UserRepositoryTest {
 
         System.out.println("findByNamePaging : "+userRepository.findByName("kim",PageRequest.of(0,1, Sort.by(Sort.Order.desc("id")))).getContent());
     }
-
     private Sort getSort() {
         return Sort.by(
                 Sort.Order.desc("id"),
@@ -157,4 +160,89 @@ class UserRepositoryTest {
                 Sort.Order.desc("createdAt")
         );
     }
+
+    @Test
+    void insertAndUpdateTest(){
+        Person person = new Person();
+
+        person.setName("kim");
+        person.setEmail("kim@gmail.com");
+        userRepository.save(person);
+
+        Person person1 = userRepository.findById(1L).orElseThrow(RuntimeException::new);
+        person1.setName("kiiiiiiiiiiim");
+
+        userRepository.save(person1);
+    }
+
+    @Test
+    void enumTest(){
+        Person person = userRepository.findById(1L).orElseThrow(RuntimeException::new);
+        person.setGender(Gender.MALE);
+
+        userRepository.save(person);
+
+        userRepository.findAll().forEach(System.out::println);
+
+        System.out.println(userRepository.findRawRecord().get("gender"));
+    }
+    @Test
+    void listenerTest(){
+        Person person = new Person();
+        person.setEmail("kim@gmail1.com");
+        person.setName("kim");
+
+        userRepository.save(person);
+
+        Person person1 = userRepository.findById(1l).orElseThrow(RuntimeException::new);
+        person1.setName("kiiiiiiim");
+
+        userRepository.save(person1);
+
+        userRepository.deleteById(4l);
+    }
+
+    @Test
+    void prePersistTest(){
+        Person person = new Person();
+        person.setEmail("kim2@google.com");
+        person.setName("kim");
+
+        // Don't Repeat Your Self
+//        person.setCreatedAt(LocalDateTime.now());
+//        person.setUpdatedAt(LocalDateTime.now());
+
+        userRepository.save(person);
+
+        System.out.println(userRepository.findByEmail("kim2@google.com"));
+    }
+
+    @Test
+    void preUpdateTest(){
+        Person person = userRepository.findById(1l).orElseThrow(RuntimeException::new);
+        System.out.println("as-is : " + person);
+
+        person.setName("whowhowho");
+        userRepository.save(person);
+
+        // 영속성 캐시 사용
+        System.out.println("to-be :"+userRepository.findAll().get(0));
+    }
+
+    @Test
+    void userHistoryTest(){
+        Person person = new Person();
+        person.setEmail("kim-new@gmail.com");
+        person.setName("kim-new");
+
+        userRepository.save(person);
+
+        person.setName("kim-new-new");
+
+        userRepository.save(person);
+
+        userHistoryRepository.findAll().forEach(System.out::println);
+
+    }
+
 }
