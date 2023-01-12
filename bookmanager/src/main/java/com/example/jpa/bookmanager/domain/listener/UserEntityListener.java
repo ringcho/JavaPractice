@@ -1,24 +1,24 @@
 package com.example.jpa.bookmanager.domain.listener;
 
 import com.example.jpa.bookmanager.domain.Person;
-import com.example.jpa.bookmanager.domain.UserHistory;
-import com.example.jpa.bookmanager.repository.UserHistoryRepository;
+import com.example.jpa.bookmanager.domain.PersonHistory;
+import com.example.jpa.bookmanager.repository.PersonHistoryRepository;
 import com.example.jpa.bookmanager.support.BeanUtils;
 
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
+import javax.persistence.PostPersist;
+import javax.persistence.PostUpdate;
 
 public class UserEntityListener {
-    @PrePersist
-    @PreUpdate
+    @PostPersist
+    @PostUpdate
     public void perPersistAndPreUpdate(Object obj){
-        UserHistoryRepository userHistoryRepository = BeanUtils.getBean(UserHistoryRepository.class);
+        PersonHistoryRepository userHistoryRepository = BeanUtils.getBean(PersonHistoryRepository.class);
         Person person = (Person) obj;
-        UserHistory userHistory = new UserHistory();
-        userHistory.setPersonId(person.getId());
-        userHistory.setName(person.getName());
-        userHistory.setEmail(person.getEmail());
+        PersonHistory personHistory = new PersonHistory();
+        personHistory.setPersonId(person.getId());
+        personHistory.setName(person.getName());
+        personHistory.setEmail(person.getEmail());
 
-        userHistoryRepository.save(userHistory);
+        userHistoryRepository.save(personHistory);
     }
 }

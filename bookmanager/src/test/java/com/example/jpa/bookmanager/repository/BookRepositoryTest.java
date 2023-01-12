@@ -13,7 +13,8 @@ class BookRepositoryTest {
     void bookTest(){
         Book book = new Book();
         book.setName("Jpa basic");
-        book.setAuthor("Minchul");
+        book.setAuthorId(1l);
+        book.setPublisherId(1l);
 
         bookRepository.save(book);
 

@@ -5,7 +5,9 @@ import com.example.jpa.bookmanager.domain.listener.UserEntityListener;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,22 +19,32 @@ import java.util.List;
 @EntityListeners(value = {UserEntityListener.class})
 @EqualsAndHashCode(callSuper=true)
 @ToString(callSuper = true)
-public class Person extends BaseEntity implements Auditable {
+public class Person extends BaseEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NonNull
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private String name;
 
     @NonNull
-    @Column(unique = true) // column에 유니크 속성 추가
+//    @Column(unique = true) // column에 유니크 속성 추가
     private String email;
 
     @Enumerated(value = EnumType.STRING) // ORDINAL로 하면 인덱스로 DB에 저장되므로, 스트링으로 하는 것이 에러 방지에 용이
     private Gender gender;
+
+
+//    @OneToMany(fetch = FetchType.EAGER)
+//    private Set<Address> address;
+
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn
+    private List<PersonHistory> personHistories = new ArrayList<>();
+    // null point exception 방지
+
 
 //    @Column(name = "created_at", updatable = false) // name 속성으로 사용된 것으로 매핑됨, not_null field를 만들 때 사용
 //    @CreatedDate
@@ -41,9 +53,6 @@ public class Person extends BaseEntity implements Auditable {
 //    @Column(insertable = false)
 //    @LastModifiedDate
 //    private LocalDateTime updatedAt;
-
-    @OneToMany(fetch = FetchType.EAGER)
-    private List<Address> address;
 
 //    @Transient // 영속성 처리 제외
 //    private String testData;

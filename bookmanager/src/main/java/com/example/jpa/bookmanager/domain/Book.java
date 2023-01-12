@@ -6,9 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @NoArgsConstructor
@@ -16,14 +14,23 @@ import javax.persistence.Id;
 @EqualsAndHashCode(callSuper=true)
 @ToString(callSuper = true)
 //@EntityListeners(value = AuditingEntityListener.class)
-public class Book extends BaseEntity implements Auditable {
+public class Book extends BaseEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY )
     private Long id;
 
     private String name;
 
-    private String author;
+    private String category;
+
+    private Long authorId;
+
+    private Long publisherId;
+
+    @OneToOne(mappedBy = "book") // mappedBy: 연관키를 해당 테이블에서는 가지지않음
+    @ToString.Exclude // ToString은 순환참조이므로 해당 어노테이션이 없으면, Stackoverflow
+    private BookReviewInfo bookReviewInfo;
+
 
 //    @Column(updatable = false)
 //    @CreatedDate

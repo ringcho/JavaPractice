@@ -2,6 +2,7 @@ package com.example.jpa.bookmanager.repository;
 
 import com.example.jpa.bookmanager.domain.Gender;
 import com.example.jpa.bookmanager.domain.Person;
+import com.example.jpa.bookmanager.domain.PersonHistory;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.*;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Set;
 
 import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.endsWith;
 
@@ -19,7 +21,7 @@ class UserRepositoryTest {
     private UserRepository userRepository;
 
     @Autowired
-    private UserHistoryRepository userHistoryRepository;
+    private PersonHistoryRepository personHistoryRepository;
 
     @Test
     void search(){
@@ -241,8 +243,38 @@ class UserRepositoryTest {
 
         userRepository.save(person);
 
-        userHistoryRepository.findAll().forEach(System.out::println);
+        personHistoryRepository.findAll().forEach(System.out::println);
 
+    }
+
+    @Test
+    void userRelationTest()
+    {
+        Person person = new Person();
+        person.setEmail("david@google.com");
+        person.setName("david");
+        person.setGender(Gender.MALE);
+
+        userRepository.save(person);
+
+        person.setName("daniel");
+
+        userRepository.save(person);
+
+        person.setEmail("daniel@google.com");
+
+        userRepository.save(person);
+
+//        userHistoryRepository.findAll().forEach(System.out::println);
+//        List<UserHistory> res = userHistoryRepository.findByPersonId(
+//                userRepository.findByEmail("daniel@google.com").getId()
+//        );
+
+        List<PersonHistory> res = userRepository.findByEmail("daniel@google.com").getPersonHistories();
+
+        res.forEach(System.out::println);
+        personHistoryRepository.findAll().forEach(System.out::println);
+//        userHistoryRepository.findByPersonId(6l).forEach(System.out::println);
     }
 
 }
