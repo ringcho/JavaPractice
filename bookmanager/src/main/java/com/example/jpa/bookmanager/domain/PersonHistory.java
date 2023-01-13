@@ -6,10 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @NoArgsConstructor
@@ -22,12 +19,15 @@ public class PersonHistory extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long personId;
 
     private String name;
 
     // @CreatedBy 누가 작성했는지
     private String email;
+
+    @ManyToOne
+    @ToString.Exclude
+    private Person person;
 
 //    @CreatedDate
 //    private LocalDateTime createdAt;

@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -25,11 +28,31 @@ public class Book extends BaseEntity {
 
     private Long authorId;
 
-    private Long publisherId;
-
     @OneToOne(mappedBy = "book") // mappedBy: 연관키를 해당 테이블에서는 가지지않음
     @ToString.Exclude // ToString은 순환참조이므로 해당 어노테이션이 없으면, Stackoverflow
     private BookReviewInfo bookReviewInfo;
+
+    @ManyToOne
+    @ToString.Exclude
+    private Publisher publisher;
+
+    @OneToMany
+    @JoinColumn(name="book_id")
+    @ToString.Exclude
+    private List<Review> reviews = new ArrayList<>();
+
+//    @ManyToMany
+//    @ToString.Exclude
+//    private List<Author> authors = new ArrayList<>();
+
+    @OneToMany
+    @JoinColumn(name = "book_id")
+    @ToString.Exclude
+    private List<BookAndAuthor> bookAndAuthors = new ArrayList<>();
+
+    public void addBookAndAuthors(BookAndAuthor... bookAndAuthors){
+        Collections.addAll(this.bookAndAuthors, bookAndAuthors);
+    }
 
 
 //    @Column(updatable = false)

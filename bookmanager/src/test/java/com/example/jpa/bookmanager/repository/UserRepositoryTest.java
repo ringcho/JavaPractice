@@ -273,7 +273,9 @@ class UserRepositoryTest {
         List<PersonHistory> res = userRepository.findByEmail("daniel@google.com").getPersonHistories();
 
         res.forEach(System.out::println);
-        personHistoryRepository.findAll().forEach(System.out::println);
+        System.out.println("-------------------------------------------------------");
+//        personHistoryRepository.findAll().forEach(System.out::println);
+        System.out.println(personHistoryRepository.findAll().get(0).getPerson());
 //        userHistoryRepository.findByPersonId(6l).forEach(System.out::println);
     }
 

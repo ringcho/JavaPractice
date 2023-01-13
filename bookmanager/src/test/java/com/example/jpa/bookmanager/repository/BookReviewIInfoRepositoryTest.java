@@ -50,7 +50,7 @@ class BookReviewIInfoRepositoryTest {
         Book book = new Book();
         book.setName("new");
         book.setAuthorId(1l);
-        book.setPublisherId(1l);
+//        book.setPublisherId(1l);
 
         return bookRepository.save(book);
     }

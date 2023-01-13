@@ -41,9 +41,15 @@ public class Person extends BaseEntity {
 //    private Set<Address> address;
 
     @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn
+    @JoinColumn(name="person_id", insertable = false, updatable = false)
+    @ToString.Exclude
     private List<PersonHistory> personHistories = new ArrayList<>();
     // null point exception 방지
+
+    @OneToMany
+    @JoinColumn(name = "person_id")
+    @ToString.Exclude
+    private List<Review> reviews = new ArrayList<>();
 
 
 //    @Column(name = "created_at", updatable = false) // name 속성으로 사용된 것으로 매핑됨, not_null field를 만들 때 사용
